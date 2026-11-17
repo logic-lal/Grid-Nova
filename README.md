@@ -1,8 +1,8 @@
 <<<<<<< HEAD
-# GridNova
+# E_Sync
 ## Intelligent Hybrid Renewable Energy Optimization and Simulation System
 
-GridNova is an educational hybrid renewable-energy simulator. It models solar and wind energy generation, household electricity demand, battery charging/discharging, seven-day energy behaviour, and selected numerical methods.
+E_Sync is an educational hybrid renewable-energy simulator. It models solar and wind energy generation, household electricity demand, battery charging/discharging, seven-day energy behaviour, and selected numerical methods.
 
 ## Features
 - Solar generation from irradiance, panel area, efficiency, and sunshine duration.
@@ -42,7 +42,7 @@ python src/main.py
 ```
 
 ## Project structure
-- `src/app.py`: interactive GridNova dashboard
+- `src/app.py`: interactive E_Sync dashboard
 - `src/energy_sources/solar.py`: solar energy calculations
 - `src/energy_sources/wind.py`: wind energy calculations
 - `src/demand.py`: appliance demand calculation
