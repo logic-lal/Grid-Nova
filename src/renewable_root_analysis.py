@@ -17,11 +17,10 @@ air_density=1.225
 hours=24
 
 
-# Calculate required wind energy
 required_wind_energy=(capacity-initial_soc)/charge_efficiency-(solar_energy-demand)
 
 
-# Calculate wind energy for a given wind speed
+# Calculation of wind energy
 def wind_energy(speed):
 
     area=math.pi*blade_radius**2
@@ -31,7 +30,8 @@ def wind_energy(speed):
     return power*hours
 
 
-# Root equation
+# Root equation that we need to solve
+
 def f(speed):
 
     return wind_energy(speed)-required_wind_energy

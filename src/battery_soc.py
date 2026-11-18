@@ -100,7 +100,7 @@ def get_power(profile,t):
     return profile[index]+fraction*(profile[index+1]-profile[index])
 
 
-# Battery differential equation
+# Battery differential equation-calculate rate of change of battery
 def battery_rate(t,soc):
 
     solar=get_power(solar_profile,t)
