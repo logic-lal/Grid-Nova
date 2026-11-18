@@ -1,146 +1,139 @@
 
-def f(x):
-    return x**2-4
-
-
-def bisection(a,b,e):
-
-    if f(a)*f(b)>=0:
+def bisection(f, a, b, e, max_iterations=200):
+    if f(a) * f(b) >= 0:
         print("Invalid interval")
-        return None
+        return None, 0
 
-    iteration=1
+    iteration = 1
+    c = a
 
-    while True:
+    while iteration <= max_iterations:
+        c = (a + b) / 2
 
-        c=(a+b)/2
-
-        print("Iteration:",iteration)
-        print("a =",a)
-        print("b =",b)
-        print("c =",c)
-        print("f(c) =",f(c))
+        print("Iteration:", iteration)
+        print("a =", a)
+        print("b =", b)
+        print("c =", c)
+        print("f(c) =", f(c))
         print("--------------------")
 
-        if abs(f(c))<e:
+        if abs(f(c)) < e:
             break
 
-        if f(a)*f(c)<0:
-            b=c
+        if f(a) * f(c) < 0:
+            b = c
         else:
-            a=c
+            a = c
 
-        iteration+=1
+        iteration += 1
 
-    print("Approximate root:",c)
-    return c
+    print("Approximate root:", c)
+    return c, iteration
 
 
-
-def false_position(a,b,e):
-
-    if f(a)*f(b)>=0:
+def false_position(f, a, b, e, max_iterations=200):
+    if f(a) * f(b) >= 0:
         print("Invalid interval")
-        return None
+        return None, 0
 
-    iteration=1
+    iteration = 1
+    c = a
 
-    while True:
+    while iteration <= max_iterations:
+        fl, fr = f(a), f(b)
+        if abs(fr - fl) < 1e-15:
+            break
+            
+        c = (a * fr - b * fl) / (fr - fl)
 
-        c=(a*f(b)-b*f(a))/(f(b)-f(a))
-
-        print("Iteration:",iteration)
-        print("a =",a)
-        print("b =",b)
-        print("c =",c)
-        print("f(c) =",f(c))
+        print("Iteration:", iteration)
+        print("a =", a)
+        print("b =", b)
+        print("c =", c)
+        print("f(c) =", f(c))
         print("--------------------")
 
-        if abs(f(c))<e:
+        if abs(f(c)) < e:
             break
 
-        if f(a)*f(c)<0:
-            b=c
+        if f(a) * f(c) < 0:
+            b = c
         else:
-            a=c
+            a = c
 
-        iteration+=1
+        iteration += 1
 
-    print("Approximate root:",c)
-    return c
-
-
-def derivative(x):
-    return 2*x
+    print("Approximate root:", c)
+    return c, iteration
 
 
-def newton_raphson(x,e):
+def newton_raphson(f, derivative, x, e, max_iterations=200):
+    iteration = 1
+    new_x = x
 
-    iteration=1
-
-    while True:
-
-        if derivative(x)==0:
+    while iteration <= max_iterations:
+        deriv = derivative(new_x)
+        if abs(deriv) < 1e-12:
             print("Derivative is zero")
-            return None
+            return None, 0
 
-        new_x=x-f(x)/derivative(x)
+        current_x = new_x
+        new_x = current_x - f(current_x) / deriv
 
-        print("Iteration:",iteration)
-        print("x =",x)
-        print("New x =",new_x)
-        print("f(x) =",f(new_x))
+        print("Iteration:", iteration)
+        print("x =", current_x)
+        print("New x =", new_x)
+        print("f(x) =", f(new_x))
         print("--------------------")
 
-        if abs(new_x-x)<e:
+        if abs(new_x - current_x) < e:
             break
 
-        x=new_x
-        iteration+=1
+        iteration += 1
 
-    print("Approximate root:",new_x)
-    return new_x
-
-
-print("\nBISECTION METHOD")
-root1=bisection(1,3,0.0001)
-
-print("\nFALSE POSITION METHOD")
-root2=false_position(1,3,0.0001)
-
-print("\nNEWTON RAPHSON METHOD")
-root3=newton_raphson(3,0.0001)
+    print("Approximate root:", new_x)
+    return new_x, iteration
 
 
-print("\n========== METHOD COMPARISON ==========")
+if __name__ == "__main__":
+    # Test functions for standalone execution
+    def f(x):
+        return x**2 - 4
 
-results=[
-    ("Bisection",root1),
-    ("False Position",root2),
-    ("Newton Raphson",root3)
-]
+    def derivative(x):
+        return 2*x
 
-valid_results=[]
+    print("\nBISECTION METHOD")
+    root1, it1 = bisection(f, 1, 3, 0.0001)
 
-for method,root in results:
+    print("\nFALSE POSITION METHOD")
+    root2, it2 = false_position(f, 1, 3, 0.0001)
 
-    if root is not None:
+    print("\nNEWTON RAPHSON METHOD")
+    root3, it3 = newton_raphson(f, derivative, 3, 0.0001)
 
-        error=abs(f(root))
+    print("\n========== METHOD COMPARISON ==========")
 
-        print(method)
-        print("Root:",root)
-        print("Error:",error)
-        print("--------------------")
+    results = [
+        ("Bisection", root1),
+        ("False Position", root2),
+        ("Newton Raphson", root3)
+    ]
 
-        valid_results.append((method,root,error))
+    valid_results = []
 
+    for method, root in results:
+        if root is not None:
+            error = abs(f(root))
+            print(method)
+            print("Root:", root)
+            print("Error:", error)
+            print("--------------------")
+            valid_results.append((method, root, error))
 
-if valid_results:
-
-    best=min(valid_results,key=lambda item:item[2])
-
-    print("\n========== BEST RESULT ==========")
-    print("Best Method:",best[0])
-    print("Best Root:",best[1])
-    print("Error:",best[2])
+    if valid_results:
+        best = min(valid_results, key=lambda item: item[2])
+        print("\n========== BEST RESULT ==========")
+        print("Best Method:", best[0])
+        print("Best Root:", best[1])
+        print("Error:", best[2])
